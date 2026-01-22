@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Painel Administrativo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{background:#0f2027;color:#fff;font-family:Arial;padding:15px}
+.card{background:#111;padding:15px;border-radius:10px;margin-bottom:10px}
+.total{font-size:20px;text-align:center;color:#00ffd5}
+</style>
+</head>
+
+<body>
+
+<h1>📋 Painel Administrativo</h1>
+<div class="total">💰 Total arrecadado: R$ <span id="total">0</span></div>
+<div id="lista"></div>
+
+<script>
+fetch("https://api.jsonbin.io/v3/b/YOUR_ID/latest",{
+  headers:{
+    "X-Master-Key":"SUA_CHAVE"
+  }
+})
+.then(r=>r.json())
+.then(d=>{
+  let total=0;
+  const lista=document.getElementById("lista");
+
+  d.record.forEach(p=>{
+    total+=p.valor;
+    lista.innerHTML+=`
+      <div class="card">
+        👥 ${p.nome}<br>
+        🎟️ ${p.vagas} vagas<br>
+        💰 R$ ${p.valor}
+      </div>`;
+  });
+
+  document.getElementById("total").innerText = total;
+});
+</script>
+
+</body>
+</html>
