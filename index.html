@@ -1,91 +1,17 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>Painel Administrativo</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-<style>
-body {
-  background:#0f2027;
-  color:#fff;
-  font-family: Arial, sans-serif;
-  margin:0;
-  padding:15px;
-}
-h1 {
-  text-align:center;
-  color:#00ffd5;
-}
-.total {
-  text-align:center;
-  font-size:20px;
-  font-weight:bold;
-  margin:15px 0;
-  color:#00ffcc;
-}
-.card {
-  background:#111;
-  padding:15px;
-  border-radius:10px;
-  margin-bottom:10px;
-}
-small {
-  color:#aaa;
-}
-</style>
-</head>
-
-<body>
-
-<h1>📋 Painel de Inscrições</h1>
-
-<div class="total">
-  💰 Total arrecadado: R$ <span id="total">0,00</span>
-</div>
-
-<div id="lista"></div>
-
 <script>
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
+  apiKey: "AIzaSyAkqJFPeskVz6Gv6bJIRd93V1ek9TGosGg",
   authDomain: "trilha-mirante.firebaseapp.com",
   databaseURL: "https://trilha-mirante-default-rtdb.firebaseio.com",
   projectId: "trilha-mirante",
   storageBucket: "trilha-mirante.appspot.com",
-  messagingSenderId: "SEU_ID",
-  appId: "SEU_APP_ID"
+  messagingSenderId: "804811256441",
+  appId: "1:804811256441:web:e226e56b5afec93d409aa8"
 };
 
 firebase.initializeApp(firebaseConfig);
-
-const lista = document.getElementById("lista");
-const totalSpan = document.getElementById("total");
-
-firebase.database().ref("inscricoes").on("value", snapshot => {
-  lista.innerHTML = "";
-  let total = 0;
-
-  snapshot.forEach(item => {
-    const d = item.val();
-    total += d.valor;
-
-    lista.innerHTML += `
-      <div class="card">
-        👤 <b>${d.nomes.replace(/\n/g,"<br>")}</b><br>
-        🎟️ Vagas: ${d.vagas}<br>
-        💰 Valor: R$ ${d.valor.toFixed(2).replace(".", ",")}<br>
-        <small>🕒 ${d.data}</small>
-      </div>
-    `;
-  });
-
-  totalSpan.innerText = total.toFixed(2).replace(".", ",");
-});
 </script>
 
-</body>
-</html>
