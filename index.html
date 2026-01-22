@@ -12,22 +12,29 @@
 body {
   background:#0f2027;
   color:#fff;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
+  margin:0;
   padding:15px;
 }
-h1 { text-align:center; color:#00ffd5; }
+h1 {
+  text-align:center;
+  color:#00ffd5;
+}
+.total {
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+  margin:15px 0;
+  color:#00ffcc;
+}
 .card {
   background:#111;
   padding:15px;
   border-radius:10px;
   margin-bottom:10px;
 }
-.total {
-  text-align:center;
-  font-size:20px;
-  font-weight:bold;
-  color:#00ffcc;
-  margin-bottom:15px;
+small {
+  color:#aaa;
 }
 </style>
 </head>
@@ -58,11 +65,11 @@ firebase.initializeApp(firebaseConfig);
 const lista = document.getElementById("lista");
 const totalSpan = document.getElementById("total");
 
-firebase.database().ref("inscricoes").on("value", snap => {
+firebase.database().ref("inscricoes").on("value", snapshot => {
   lista.innerHTML = "";
   let total = 0;
 
-  snap.forEach(item => {
+  snapshot.forEach(item => {
     const d = item.val();
     total += d.valor;
 
@@ -70,16 +77,15 @@ firebase.database().ref("inscricoes").on("value", snap => {
       <div class="card">
         👤 <b>${d.nomes.replace(/\n/g,"<br>")}</b><br>
         🎟️ Vagas: ${d.vagas}<br>
-        💰 Valor: R$ ${d.valor.toFixed(2)}<br>
-        🕒 ${d.data}
+        💰 Valor: R$ ${d.valor.toFixed(2).replace(".", ",")}<br>
+        <small>🕒 ${d.data}</small>
       </div>
     `;
   });
 
-  totalSpan.innerText = total.toFixed(2);
+  totalSpan.innerText = total.toFixed(2).replace(".", ",");
 });
 </script>
 
 </body>
 </html>
-
