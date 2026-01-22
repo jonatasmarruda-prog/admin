@@ -4,43 +4,82 @@
 <meta charset="UTF-8">
 <title>Painel Administrativo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
 <style>
-body{background:#0f2027;color:#fff;font-family:Arial;padding:15px}
-.card{background:#111;padding:15px;border-radius:10px;margin-bottom:10px}
-.total{font-size:20px;text-align:center;color:#00ffd5}
+body {
+  background:#0f2027;
+  color:#fff;
+  font-family: Arial;
+  padding:15px;
+}
+h1 { text-align:center; color:#00ffd5; }
+.card {
+  background:#111;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+.total {
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+  color:#00ffcc;
+  margin-bottom:15px;
+}
 </style>
 </head>
 
 <body>
 
-<h1>📋 Painel Administrativo</h1>
-<div class="total">💰 Total arrecadado: R$ <span id="total">0</span></div>
+<h1>📋 Painel de Inscrições</h1>
+
+<div class="total">
+  💰 Total arrecadado: R$ <span id="total">0,00</span>
+</div>
+
 <div id="lista"></div>
 
 <script>
-fetch("https://api.jsonbin.io/v3/b/YOUR_ID/latest",{
-  headers:{
-    "X-Master-Key":"SUA_CHAVE"
-  }
-})
-.then(r=>r.json())
-.then(d=>{
-  let total=0;
-  const lista=document.getElementById("lista");
+const firebaseConfig = {
+  apiKey: "SUA_API_KEY",
+  authDomain: "trilha-mirante.firebaseapp.com",
+  databaseURL: "https://trilha-mirante-default-rtdb.firebaseio.com",
+  projectId: "trilha-mirante",
+  storageBucket: "trilha-mirante.appspot.com",
+  messagingSenderId: "SEU_ID",
+  appId: "SEU_APP_ID"
+};
 
-  d.record.forEach(p=>{
-    total+=p.valor;
-    lista.innerHTML+=`
+firebase.initializeApp(firebaseConfig);
+
+const lista = document.getElementById("lista");
+const totalSpan = document.getElementById("total");
+
+firebase.database().ref("inscricoes").on("value", snap => {
+  lista.innerHTML = "";
+  let total = 0;
+
+  snap.forEach(item => {
+    const d = item.val();
+    total += d.valor;
+
+    lista.innerHTML += `
       <div class="card">
-        👥 ${p.nome}<br>
-        🎟️ ${p.vagas} vagas<br>
-        💰 R$ ${p.valor}
-      </div>`;
+        👤 <b>${d.nomes.replace(/\n/g,"<br>")}</b><br>
+        🎟️ Vagas: ${d.vagas}<br>
+        💰 Valor: R$ ${d.valor.toFixed(2)}<br>
+        🕒 ${d.data}
+      </div>
+    `;
   });
 
-  document.getElementById("total").innerText = total;
+  totalSpan.innerText = total.toFixed(2);
 });
 </script>
 
 </body>
 </html>
+
