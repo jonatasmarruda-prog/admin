@@ -1,17 +1,29 @@
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+function confirmar() {
+  const nomes = document.getElementById("nomes").value.trim();
+  const qtd = parseInt(document.getElementById("qtd").value);
 
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyAkqJFPeskVz6Gv6bJIRd93V1ek9TGosGg",
-  authDomain: "trilha-mirante.firebaseapp.com",
-  databaseURL: "https://trilha-mirante-default-rtdb.firebaseio.com",
-  projectId: "trilha-mirante",
-  storageBucket: "trilha-mirante.appspot.com",
-  messagingSenderId: "804811256441",
-  appId: "1:804811256441:web:e226e56b5afec93d409aa8"
-};
+  if (!nomes) {
+    alert("⚠️ Informe os nomes antes de continuar");
+    return;
+  }
 
-firebase.initializeApp(firebaseConfig);
-</script>
+  // salva no Firebase
+  firebase.database().ref("inscricoes").push({
+    nomes: nomes,
+    vagas: qtd,
+    valor: qtd * 15,
+    data: new Date().toLocaleString("pt-BR")
+  });
 
+  // reduz vagas
+  vagasRef.transaction(v => {
+    if (v >= qtd) return v - qtd;
+    return v;
+  });
+
+  // copia o PIX
+  navigator.clipboard.writeText("trilheiros.roomt@gmail.com");
+
+  // mostra mensagem no seu site …
+  // e abre Whatsapp depois
+}
